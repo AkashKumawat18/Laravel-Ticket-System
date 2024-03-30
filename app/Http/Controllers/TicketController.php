@@ -65,7 +65,7 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        //
+        return view('ticket.edit',compact('ticket'));
     }
 
     /**
@@ -73,7 +73,13 @@ class TicketController extends Controller
      */
     public function update(UpdateTicketRequest $request, Ticket $ticket)
     {
-        //
+       $updatedTicket =  $ticket->update([
+            'title'=> $request->title,
+            'description'=>$request->description,
+            'attachment'=>$request->attachment
+        ]);
+
+        return response($updatedTicket);
     }
 
     /**
