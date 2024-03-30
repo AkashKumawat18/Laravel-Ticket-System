@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
 use App\Models\Ticket;
+use Illuminate\Support\Facades\Storage;
+use Psy\Util\Str;
 
 class TicketController extends Controller
 {
@@ -13,7 +15,8 @@ class TicketController extends Controller
      */
     public function index()
     {
-        //
+        $tickets = Ticket::all();
+        return view('ticket.index',compact('tickets'));
     }
 
     /**
@@ -29,7 +32,24 @@ class TicketController extends Controller
      */
     public function store(StoreTicketRequest $request)
     {
-        //
+        $ticket = Ticket::create([
+            'title'=>$request->title,
+            'description'=>$request->description,
+            'user_id'=>auth()->id(),
+        ]);
+
+        if($request->file('attachment')){
+            $ext = $request->file('attachment')->extension();
+            $contents = file_get_contents($request->file('attachment'));
+            $fileName = \Illuminate\Support\Str::random(25);
+            $path = "attachments/$fileName.$ext";
+            Storage::disk('public')->put($path,$contents);
+            $ticket->update(['attachment'=>$path]);
+        }
+
+
+
+        return response($ticket);
     }
 
     /**
@@ -37,7 +57,7 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        //
+      return view('ticket.show',compact('ticket'));
     }
 
     /**
