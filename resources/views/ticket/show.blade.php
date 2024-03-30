@@ -12,6 +12,17 @@
                     <a href="{{"/storage/".$ticket->attachment}}" target="_blank">Attachment</a>
                     @endif
                 </div>
+            <div class="flex justify-between">
+
+                    <x-primary-button>Edit</x-primary-button>
+                
+            <form action="{{route('ticket.destroy',$ticket->id)}}" method="post">
+                @csrf
+                @method('delete')
+                <x-primary-button>Delete</x-primary-button>
+            </form>
+            </div>
+
 
         </div>
     </div>
